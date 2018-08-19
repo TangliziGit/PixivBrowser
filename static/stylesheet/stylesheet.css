@@ -1,0 +1,29 @@
+#container{
+    width: 768px;
+    margin: auto;
+}
+
+.itemsRow{
+    margin: 5px 5px 5px 5px;
+    overflow: hidden;
+    height: auto;
+
+    border-style:solid;
+    border-width:thin;
+}
+.itemsImg{
+    float: left;
+}
+.itemsText{
+    margin: 0px 0px 0px 10px;
+    float: left;
+}
+
+.image{
+    width: 180px;
+    height: 180px;
+}
+.paint{
+    width: 100%;
+    height: auto;
+}
