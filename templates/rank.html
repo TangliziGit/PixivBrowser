@@ -12,7 +12,8 @@
     <div id="container"></div>
 
     <script>
-        var server={'rankUrl': {{rankUrl|tojson}} };
+        var rankAPI= {{rankAPI|tojson}};
+        var pageInfo={{pageInfo|tojson}};
     </script>
     <script src={{url_for("static", filename="javascript/config.js")}}></script>
     <script src={{url_for("static", filename="javascript/rank.js")}}></script>

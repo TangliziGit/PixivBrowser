@@ -28,7 +28,9 @@ def rank():
         'date': request.args.get('date', default=''),
     }
     url=config['API']+urllib.parse.urlencode(url_args)
-    return render_template("rank.html", rankUrl=url)
+    return render_template("rank.html",
+            rankAPI=url,
+            pageInfo=url_args)
 
 @app.route('/paint', methods=['GET'])
 def paint():
