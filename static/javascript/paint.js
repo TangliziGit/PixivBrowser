@@ -1,5 +1,5 @@
 function createUserInfo(data){
-    var proxyUrl=config.proxyUrl;
+    var proxyUrl=config.proxyUrlWithArgs;
     var x=data['illust'];
     var total_id="#divUserTotal",
         divUserImg_id="#divUserImg",
@@ -54,7 +54,7 @@ function loadPicture(url, imgId){
 }
 
 function createImageInfo(data){
-    var proxyUrl=config.proxyUrl;
+    var proxyUrl=config.proxyUrlWithArgs;
     var x=data['illust'];
     var divImgId='#divImg',
         divImgInfoId='#divImgInfo';
