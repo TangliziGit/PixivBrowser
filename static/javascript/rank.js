@@ -1,10 +1,19 @@
-function createItemsRows(data, key){
+function createItemsRows(data){
     var proxyUrl=config.proxyUrlWithArgs;
     if (data['illusts'].length==0){
         $("<div />", {
-            'id': "div_"+key,
-            'class': 'itemsRow'
+            'id': "divInfo",
+            'class': 'itemsRow',
         }).appendTo($("#container"));
+
+        $("<div />", {
+            'style': 'text-align: center',
+            'text': 'No items.'
+        }).appendTo($("#divInfo"));
+        $("<div />", {
+            'style': 'text-align: center',
+            'text': 'Maybe server is calculating ranking, or page not found.'
+        }).appendTo($("#divInfo"));
 
     }
     for (var key in data['illusts']){
@@ -28,21 +37,22 @@ function createItemsRows(data, key){
         }).appendTo($(total_id));
 
         $("<a />", {
-            'id': "a_"+key,
-            'href': config.paintUrlWithArgs+x['id']
+            'id': "href_"+key,
+            'href': config.illustUrlWithArgs+x['id']
         }).appendTo($(divImg_id));
         $("<img />", {
-            'id': "img_"+key,
+            // 'id': "img_"+key,
             'class': 'image',
             'src': proxyUrl+x["image_urls"]["square_medium"]
-        }).appendTo($('#a_'+key));
+        }).appendTo($('#href_'+key));
 
         $("<p />", {
-            'id': "p_title_"+key,
+            // 'id': "p_title_"+key,
             'text': 'Title: '+x["title"]+'(id: '+x['id']+')'
         }).appendTo($(divText_id));
+
         $("<p />", {
-            'id': "p_author_"+key,
+            // 'id': "p_author_"+key,
             'text': 'Author: '+x["user"]['name']+'(id: '+ x['user']['id'] +')'
         }).appendTo($(divText_id));
 
@@ -51,8 +61,28 @@ function createItemsRows(data, key){
             tags+=x['tags'][i]['name']+', ';
         tags=tags.slice(0, tags.length-2);
         $("<p />", {
-            'id': "p_"+key,
+            // 'id': "p_tags"+key,
             'text': 'Tags: '+tags
+        }).appendTo($(divText_id));
+
+        if (x['series']===null){
+            $("<p />", {
+                'text': "Series: "+"Null"
+            }).appendTo($(divText_id));
+        }else{
+            $("<p />", {
+                'text': "Series: "+x['series']['title']+"(id: "+x['series']['id']+")"
+            }).appendTo($(divText_id));
+        }
+
+        var number=0;
+        if (Array.isArray(x['meta_single_page']))
+            number=x['meta_pages'].length;
+        else 
+            number=1;
+        $("<p />", {
+            // 'id'
+            'text': "PageNumber: "+number
         }).appendTo($(divText_id));
     }
 }
@@ -170,7 +200,6 @@ $(document).ready(function(){
         }
     });
 
-    console.log(pageInfo);
     createPageInfo('head');
     createJumpBox();
     createItemsRows(data);

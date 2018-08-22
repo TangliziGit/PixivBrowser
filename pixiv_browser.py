@@ -32,14 +32,34 @@ def rank():
             rankAPI=url,
             pageInfo=url_args)
 
-@app.route('/paint', methods=['GET'])
-def paint():
+@app.route('/illust', methods=['GET'])
+def illust():
     url_args={
-        'type': 'paint',
+        'type': 'illust',
         'id': request.args.get('id', default=''),
     }
     url=config['API']+urllib.parse.urlencode(url_args)
-    return render_template("paint.html", paintUrl=url,
+    return render_template("illust.html", illustUrl=url,
+            loadingPicture=url_for("static", filename=config['loading_picture']))
+
+@app.route('/member', methods=['GET'])
+def member():
+    url_args={
+        'type': 'member',
+        'id': request.args.get('id', default=''),
+    }
+    member_url=config['API']+urllib.parse.urlencode(url_args)
+
+    url_args={
+        'type': 'member_illust',
+        'page': request.args.get('page', default='1'),
+        'id': request.args.get('id', default=''),
+    }
+    member_illust_url=config['API']+urllib.parse.urlencode(url_args)
+    return render_template("member.html",
+            memberUrl=member_url,
+            memberIllustUrl=member_illust_url,
+            pageInfo=url_args,
             loadingPicture=url_for("static", filename=config['loading_picture']))
 
 @app.route('/', methods=['GET'])

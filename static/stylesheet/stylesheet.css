@@ -13,17 +13,24 @@
 }
 .itemsImg{
     float: left;
+    width: 25%;
 }
 .itemsText{
     margin: 0px 0px 0px 10px;
     float: left;
+    width: 70%;
 }
 
 .image{
     width: 180px;
     height: 180px;
 }
-.paint{
+.illust{
     width: 100%;
     height: auto;
+}
+
+p{
+    font-family: monospace;
+    font-size: 15px;
 }
