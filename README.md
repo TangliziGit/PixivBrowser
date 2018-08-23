@@ -5,7 +5,6 @@ API from <https://api.imjad.cn/>
 ## Todo list
 用户页面（用户收藏）  
 搜索页面  
-作品页面（相关作品）  
 各页面超链接  
 服务器上的作品收藏及关注作者
 at last, maybe more beautiful?  

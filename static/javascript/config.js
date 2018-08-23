@@ -4,4 +4,5 @@ var config={
     illustUrlWithArgs: "http://localhost:5000/illust?id=",
     rankUrl:  "http://localhost:5000/rank",
     memberUrl: "http://localhost:5000/member",
+    illustUrl: "http://localhost:5000/illust",
 }

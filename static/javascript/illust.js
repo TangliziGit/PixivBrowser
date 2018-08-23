@@ -1,4 +1,5 @@
 function createUserInfo(data){
+    console.log(data)
     var proxyUrl=config.proxyUrlWithArgs;
     var x=data['illust'];
     var total_id="#divUserTotal",
@@ -150,8 +151,179 @@ function createImageInfo(data){
     }
 }
 
+function genUrl(id, page){
+    var url=config.illustUrl;
+
+    console.log(pageInfo);
+    if (id=='') id=pageInfo.id;
+    if (page=='') page=pageInfo.page;
+
+    url+="?id="+id;
+    url+="&page="+page;
+    return url;
+}
+
+function getValue(value){
+    if (value=='')
+        return 'Null';
+    return value;
+}
+
+function createPageInfo(name){
+    var divId="#"+name+"PageInfo";
+
+    $("<div />", {
+        'id': name+"PageInfo",
+        'class': 'itemsRow'
+    }).appendTo($("#container"));
+
+    $("<div />", {
+        'text': "Related - Page: "+pageInfo.page,
+        'style': 'text-align:center'
+    }).appendTo($(divId))
+    $("<a />", {
+        'id': name+"PrevHref",
+        'style': 'float: left',
+        'href': genUrl('', parseInt(pageInfo.page)-1)
+    }).appendTo($(divId));
+    $("<a />", {
+        'id': name+"PostHref",
+        'style': 'float: right',
+        'href': genUrl('', parseInt(pageInfo.page)+1)
+    }).appendTo($(divId));
+
+    $("<button />", {
+        'id': name+'PrevButton',
+        'class': 'jumpButton',
+        'text': '<< Prev'
+    }).appendTo($("#"+name+'PrevHref'));
+    $("<button />", {
+        'id': name+'PostButton',
+        'class': 'jumpButton',
+        'text': 'Post >>'
+    }).appendTo($("#"+name+'PostHref'));
+
+    if (pageInfo.page<=1){
+        $("#"+name+"PrevButton").attr("disabled", "true");
+    }
+}
+
+function createJumpBox(){
+    var divId='#jumpBox';
+
+    $("<div />", {
+        'id': 'jumpBox',
+        'class': 'jumpBox itemsRow',
+    }).appendTo($("#container"));
+
+    $("<span />", {
+        'text': 'Page: '
+    }).appendTo($(divId));
+    $("<input />", {
+        'id': 'pageBox',
+        'value': ''
+    }).appendTo($(divId));
+
+    $("<button />", {
+        'text': "Jump",
+        'id': 'jumpButton'
+    }).appendTo($(divId));
+    $("#jumpButton").click(function (){
+        window.location.href=genUrl('', $("#pageBox").val());
+    });
+}
+
+function createRelated(data){
+    var proxyUrl=config.proxyUrlWithArgs;
+    if (data['illusts'].length==0){
+        $("<div />", {
+            'id': "divInfo",
+            'class': 'itemsRow',
+        }).appendTo($("#container"));
+
+        $("<div />", {
+            'style': 'text-align: center',
+            'text': 'No items.'
+        }).appendTo($("#divInfo"));
+        $("<div />", {
+            'style': 'text-align: center',
+            'text': 'Maybe server is calculating ranking, or page not found.'
+        }).appendTo($("#divInfo"));
+
+    }
+    for (var key in data['illusts']){
+        var x=data['illusts'][key];
+        var total_id="#div_"+key,
+            divImg_id="#divImg_"+key,
+            divText_id="#divText_"+key;
+
+        $("<div />", {
+            'id': "div_"+key,
+            'class': 'itemsRow'
+        }).appendTo($("#container"));
+
+        $("<div />", {
+            'id': "divImg_"+key,
+            'class': 'itemsImg'
+        }).appendTo($(total_id));
+        $("<div />", {
+            'id': "divText_"+key,
+            'class': 'itemsText'
+        }).appendTo($(total_id));
+
+        $("<a />", {
+            'id': "href_"+key,
+            'href': genUrl(x['id'], 1)
+        }).appendTo($(divImg_id));
+        $("<img />", {
+            // 'id': "img_"+key,
+            'class': 'image',
+            'src': proxyUrl+x["image_urls"]["square_medium"]
+        }).appendTo($('#href_'+key));
+
+        $("<p />", {
+            // 'id': "p_title_"+key,
+            'text': 'Title: '+x["title"]+'(id: '+x['id']+')'
+        }).appendTo($(divText_id));
+
+        $("<p />", {
+            // 'id': "p_author_"+key,
+            'text': 'Author: '+x["user"]['name']+'(id: '+ x['user']['id'] +')'
+        }).appendTo($(divText_id));
+
+        var tags='';
+        for (var i=0; i<x['tags'].length && i<config.tagsLength; i++)
+            tags+=x['tags'][i]['name']+', ';
+        tags=tags.slice(0, tags.length-2);
+        $("<p />", {
+            // 'id': "p_tags"+key,
+            'text': 'Tags: '+tags
+        }).appendTo($(divText_id));
+
+        if (x['series']===null){
+            $("<p />", {
+                'text': "Series: "+"Null"
+            }).appendTo($(divText_id));
+        }else{
+            $("<p />", {
+                'text': "Series: "+x['series']['title']+"(id: "+x['series']['id']+")"
+            }).appendTo($(divText_id));
+        }
+
+        var number=0;
+        if (Array.isArray(x['meta_single_page']))
+            number=x['meta_pages'].length;
+        else 
+            number=1;
+        $("<p />", {
+            // 'id'
+            'text': "PageNumber: "+number
+        }).appendTo($(divText_id));
+    }
+}
+
 $(document).ready(function(){
-    var data;
+    var data, relatedData;
     $.ajax({
         url: server.illustUrl,
         async: false,
@@ -159,6 +331,18 @@ $(document).ready(function(){
             data=response;
         }
     });
-    createUserInfo(data);
-    createImageInfo(data);
+    $.ajax({
+        url: server.relatedUrl,
+        async: false,
+        success: function(response){
+            relatedData=response;
+        }
+    });
+
+    if (pageInfo.page==1) createUserInfo(data);
+    if (pageInfo.page==1) createImageInfo(data);
+    createPageInfo('head');
+    createJumpBox(relatedData);
+    createRelated(relatedData);
+    createPageInfo('tail');
 })

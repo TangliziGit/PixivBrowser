@@ -38,8 +38,17 @@ def illust():
         'type': 'illust',
         'id': request.args.get('id', default=''),
     }
-    url=config['API']+urllib.parse.urlencode(url_args)
-    return render_template("illust.html", illustUrl=url,
+    illust_url=config['API']+urllib.parse.urlencode(url_args)
+    url_args={
+        'type': 'related',
+        'page': request.args.get('page', default='1'),
+        'id': request.args.get('id', default=''),
+    }
+    related_url=config['API']+urllib.parse.urlencode(url_args)
+    return render_template("illust.html",
+            illustUrl=illust_url,
+            relatedUrl=related_url,
+            pageInfo=url_args,
             loadingPicture=url_for("static", filename=config['loading_picture']))
 
 @app.route('/member', methods=['GET'])
