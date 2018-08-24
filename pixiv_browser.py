@@ -23,11 +23,12 @@ def proxy():
 def rank():
     url_args={
         'type': 'rank',
+        'content': request.args.get('mode', default='all'),
         'mode': request.args.get('mode', default='week'),
         'page': request.args.get('page', default='1'),
         'date': request.args.get('date', default=''),
     }
-    url=config['API']+urllib.parse.urlencode(url_args)
+    url=config['API']['1']+urllib.parse.urlencode(url_args)
     return render_template("rank.html",
             rankAPI=url,
             pageInfo=url_args)
@@ -38,13 +39,13 @@ def illust():
         'type': 'illust',
         'id': request.args.get('id', default=''),
     }
-    illust_url=config['API']+urllib.parse.urlencode(url_args)
+    illust_url=config['API']['1']+urllib.parse.urlencode(url_args)
     url_args={
         'type': 'related',
         'page': request.args.get('page', default='1'),
         'id': request.args.get('id', default=''),
     }
-    related_url=config['API']+urllib.parse.urlencode(url_args)
+    related_url=config['API']['2']+urllib.parse.urlencode(url_args)
     return render_template("illust.html",
             illustUrl=illust_url,
             relatedUrl=related_url,
@@ -57,14 +58,14 @@ def member():
         'type': 'member',
         'id': request.args.get('id', default=''),
     }
-    member_url=config['API']+urllib.parse.urlencode(url_args)
+    member_url=config['API']['2']+urllib.parse.urlencode(url_args)
 
     url_args={
         'type': 'member_illust',
         'page': request.args.get('page', default='1'),
         'id': request.args.get('id', default=''),
     }
-    member_illust_url=config['API']+urllib.parse.urlencode(url_args)
+    member_illust_url=config['API']['1']+urllib.parse.urlencode(url_args)
     return render_template("member.html",
             memberUrl=member_url,
             memberIllustUrl=member_illust_url,
